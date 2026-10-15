@@ -1,0 +1,7 @@
+import bcrypt from 'bcryptjs';
+import {User,StudentProfile} from '../models/index.js';
+import {publicUser,newSession,csrfToken} from '../middleware/auth.js';
+export async function register(req,res){const {name,email,password,role}=req.validated;const passwordHash=await bcrypt.hash(password,12);const user=await User.create({name,email,passwordHash,role,isApproved:role==='student'});await newSession(req,user);res.status(201).json({user:publicUser(user),csrfToken:csrfToken(req)})}
+export async function login(req,res){const {email,password}=req.validated;const user=await User.findOne({email}).select('+passwordHash');const dummy='$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxYOi3LpMQxMrHQkYpjAuR5kNGS';const matches=await bcrypt.compare(password,user?.passwordHash||dummy);if(!user||!matches||!user.isActive)return res.status(401).json({message:'Email or password is incorrect.'});await newSession(req,user);res.json({user:publicUser(user),csrfToken:csrfToken(req)})}
+export async function me(req,res){res.json({user:publicUser(req.user),profile:req.user.role==='student'?await StudentProfile.findOne({userId:req.user.id}):null,csrfToken:csrfToken(req)})}
+export async function logout(req,res){await new Promise((resolve,reject)=>req.session.destroy(error=>error?reject(error):resolve()));res.clearCookie('placement.sid',{httpOnly:true,sameSite:'strict',secure:req.app.locals.config.production,path:'/'});res.json({message:'Signed out.'})}

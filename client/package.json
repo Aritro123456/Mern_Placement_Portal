@@ -1,0 +1,1 @@
+{"name":"placement-client","private":true,"type":"module","scripts":{"dev":"vite --host 127.0.0.1 --port 5175","build":"vite build"},"dependencies":{"react":"^18.3.1","react-dom":"^18.3.1","react-router-dom":"^6.30.1","lucide-react":"^0.468.0"},"devDependencies":{"@vitejs/plugin-react":"^4.7.0","vite":"^6.4.1"}}

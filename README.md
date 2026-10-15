@@ -1,6 +1,24 @@
 # Campus — College Placement Portal
 
-A React + Express/Node.js + MongoDB portal with a complete, server-enforced placement flow:
+Campus is a college placement website that connects students, placement officers, recruiters, and administrators in one workspace. Placement officers publish company opportunities, students discover roles that match their academic profile and apply, and the owning officer or recruiter manages applicants through the hiring process. Students can follow each application through a dated status history.
+
+Built with **React + Vite**, **Express/Node.js**, and **MongoDB**, the portal includes a responsive landing page, student profiles, searchable opportunities, application tracking, staff dashboards, and admin controls. Role-based permissions, recruiter approval, eligibility checks, job ownership, and duplicate-application prevention are enforced by the API.
+
+### Website preview
+
+![Campus landing page introducing the placement portal](docs/screenshots/landing-page.png)
+
+### Main features
+
+- **Students:** maintain their academic profile, filter eligible jobs, apply once per opportunity, and track application progress.
+- **Placement officers:** post company placement drives, edit their opportunities, review applicants, and update application statuses.
+- **Recruiters:** publish jobs and manage their own applicants after admin approval.
+- **Administrators:** approve recruiters, assign or revoke placement officer access, manage accounts, and archive job posts.
+- **Protected workflow:** password hashing, HTTP-only cookie sessions, CSRF protection, server-side validation, and MongoDB uniqueness constraints.
+
+**Placement flow:** officer posts a company opportunity → eligible student applies → officer reviews the application → student tracks the status update.
+
+The recruiter onboarding flow is also supported:
 
 **register → admin approves recruiter → recruiter posts a job → student completes profile → student applies → recruiter changes status → student sees the history**.
 
@@ -140,9 +158,31 @@ Resume HTTPS links are supported. File uploads, interview scheduling, charts, pa
 
 The complete flow was also verified through the browser: recruiter posting, student application, recruiter shortlisting, and student status history. Mobile was checked at 390px with no horizontal overflow.
 
-- [Student dashboard](docs/screenshots/student-dashboard.png)
-- [Application timeline](docs/screenshots/application-timeline.png)
-- [Mobile dashboard](docs/screenshots/mobile-dashboard.png)
+### Student dashboard
+
+Students browse company opportunities with search, location and branch filters, eligibility details, and application summaries.
+
+![Student dashboard with available placement opportunities](docs/screenshots/student-dashboard.png)
+
+### Placement officer workspace
+
+The owning placement officer reviews student profiles and updates each applicant's placement status.
+
+![Placement officer reviewing an applicant and updating their status to interview](docs/screenshots/placement-officer-applicants.png)
+
+### Application tracking
+
+Students see their current application status and a timeline of updates.
+
+![Student application timeline showing applied and shortlisted statuses](docs/screenshots/application-timeline.png)
+
+### Mobile layout
+
+The portal adapts to smaller screens with mobile navigation and stacked opportunity cards.
+
+<img src="docs/screenshots/mobile-dashboard.png" alt="Campus student dashboard on a mobile screen" width="320" />
+
+All screenshots show illustrative demo accounts and opportunities.
 
 
 ## Landing page connection

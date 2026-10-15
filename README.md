@@ -206,3 +206,23 @@ The existing `Job.recruiterId` field remains the owning staff user ID for both r
 
 Demo: **placement_officer@campus.test**, password **PlacementDemo!2026**, or use the placement officer demo button. Run `npm run seed` to add the account without replacing existing data. Officers use the shared posting workspace at `/recruiter`. The 13 integration tests include the officer-to-student application flow, cross-owner denial, public role escalation denial, role revocation and account deactivation. The working RBAC API remains local until the MERN service is deployed to a Node-compatible host.
 
+
+## GitHub Pages deployment
+
+Frontend: https://aritro123456.github.io/Mern_Placement_Portal/
+
+The Pages workflow builds and publishes `client/dist` after the API integration tests pass. React uses the repository base path; a `404.html` fallback supports direct route links.
+
+GitHub stores the backend source but does not run the Express API or MongoDB. To enable live accounts and applications, deploy the Node backend to an HTTPS hosting service with Node 22+, run `npm ci` then `npm start`, and configure these server environment variables:
+
+- `MONGODB_URI`: the hosted MongoDB connection string (keep it secret).
+- `SESSION_SECRET`: a random secret of at least 32 characters.
+- `NODE_ENV=production`, `HOST=0.0.0.0`.
+- `CLIENT_ORIGIN=https://aritro123456.github.io`.
+- `CROSS_SITE_COOKIES=true` for a backend on a different site.
+- `TRUST_PROXY=true` only behind the hosting provider's trusted reverse proxy.
+- `PORT`: supplied by the hosting provider.
+
+Set the GitHub repository Actions variable `VITE_API_URL` to the public API URL including `/api`, then rerun the Pages workflow. This URL is public build configuration; never put database credentials or session secrets in frontend variables. Until it is set, the published frontend explains that its backend is not connected.
+
+The API permits credentialed browser requests only from `CLIENT_ORIGIN` and retains CSRF and role/ownership checks. Cross-site cookies require HTTPS and may be blocked by browser privacy settings. For reliable production sessions, use frontend and backend custom domains under the same site, or serve the frontend from Express.

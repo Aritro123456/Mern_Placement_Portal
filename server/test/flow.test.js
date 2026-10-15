@@ -65,3 +65,18 @@ test('admin-assigned placement officer posts a company opportunity, student appl
 test('logout destroys the server session',async()=>{assert.equal((await mutate(student,'post','/api/auth/logout',{})).status,200);assert.equal((await student.get('/api/auth/me')).status,401)});
 
 
+
+test('cross-origin API access is limited to the configured frontend',async()=>{
+ const preflight=await request(app).options('/api/auth/login').set('Origin',config.origin).set('Access-Control-Request-Method','POST');
+ assert.equal(preflight.status,204);
+ assert.equal(preflight.headers['access-control-allow-origin'],config.origin);
+ assert.equal(preflight.headers['access-control-allow-credentials'],'true');
+ const blocked=await request(app).options('/api/auth/login').set('Origin','https://evil.example');
+ assert.equal(blocked.status,403);
+ assert.equal(blocked.headers['access-control-allow-origin'],undefined);
+ const publicApp=createApp({...config,production:true,crossSiteCookies:true,trustProxy:true},{store:new session.MemoryStore()});
+ const token=await request(publicApp).get('/api/auth/csrf').set('X-Forwarded-Proto','https').set('Origin',config.origin);
+ assert.match(token.headers['set-cookie'][0],/SameSite=None/);
+ assert.match(token.headers['set-cookie'][0],/Secure/);
+ assert.match(token.headers['set-cookie'][0],/HttpOnly/);
+});
